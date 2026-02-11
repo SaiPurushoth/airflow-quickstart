@@ -1,4 +1,4 @@
-# Airflow Docker Training Setup
+# Airflow Docker Starter
 
 A simple, ready-to-use Apache Airflow setup with Docker for training junior developers. Start Airflow with a single command!
 
