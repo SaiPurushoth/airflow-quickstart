@@ -57,8 +57,7 @@ echo ""
 echo "Waiting for Airflow to be ready..."
 sleep 10
 
-# Check if services are running
-if docker compose ps | grep -q "running"; then
+if docker compose ps airflow-webserver --filter "status=running" | grep -q airflow-webserver; then
     echo ""
     echo "================================================"
     echo "  ✓ Airflow is now running!"
