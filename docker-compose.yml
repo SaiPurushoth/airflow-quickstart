@@ -40,6 +40,23 @@ services:
       start_period: 5s
     restart: always
 
+  postgres-data:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: datauser
+      POSTGRES_PASSWORD: datapass
+      POSTGRES_DB: pipeline_data
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "datauser"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+
   airflow-webserver:
     <<: *airflow-common
     command: webserver
@@ -93,3 +110,4 @@ services:
 
 volumes:
   postgres-db-volume:
+  postgres-data-volume:

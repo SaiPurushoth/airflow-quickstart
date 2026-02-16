@@ -75,6 +75,25 @@ An ETL pipeline example demonstrating:
 - `load` → Simulates loading to destination
 - `validate` → Validates pipeline execution
 
+### 3. PostgreSQL Pipeline DAG (`example_postgres_pipeline`) ⭐ NEW
+A real-world ETL pipeline with PostgreSQL storage:
+- Creates database tables
+- Extracts sales data
+- Transforms and enriches data
+- Loads into PostgreSQL database
+- Validates with SQL queries
+- Generates summary reports
+
+**Tasks**:
+- `create_table` → Creates sales_data table
+- `extract_data` → Extracts sample sales data
+- `transform_data` → Processes and enriches data
+- `load_to_postgres` → Stores in PostgreSQL
+- `validate_and_query` → Runs analytics queries
+- `generate_summary_report` → Creates summary report
+
+**Note:** A separate PostgreSQL database (`postgres-data`) is available on port 5433 for storing ETL results and reporting purposes.
+
 ## 🎓 Learning Path for Juniors
 
 ### Step 1: Explore the UI
@@ -144,7 +163,8 @@ docker compose run airflow-webserver airflow tasks list example_hello_world
 Airflow-Docker/
 ├── dags/                          # Your DAG files go here
 │   ├── example_hello_world.py     # Simple Hello World DAG
-│   └── example_data_pipeline.py   # ETL Pipeline example
+│   ├── example_data_pipeline.py   # ETL Pipeline example
+│   └── example_postgres_pipeline.py # PostgreSQL ETL Pipeline ⭐
 ├── logs/                          # Airflow logs (auto-generated)
 ├── plugins/                       # Custom Airflow plugins
 ├── config/                        # Airflow configuration files
@@ -158,10 +178,25 @@ Airflow-Docker/
 
 ### Default Settings
 - **Executor**: LocalExecutor (suitable for development)
-- **Database**: PostgreSQL 13
+- **Airflow Metadata DB**: PostgreSQL 13 (internal)
+- **Data Storage DB**: PostgreSQL 13 on port 5433 (for ETL results & reporting) ⭐
 - **Airflow Version**: 2.10.4 (Latest stable release)
 - **Web Server Port**: 8080
 - **Load Examples**: Disabled (only custom DAGs shown)
+
+### PostgreSQL Data Database
+A separate PostgreSQL database is available for storing your ETL pipeline results and reporting:
+- **Host**: `localhost` (from host machine) or `postgres-data` (from containers)
+- **Port**: `5433`
+- **Database**: `pipeline_data`
+- **Username**: `datauser`
+- **Password**: `datapass`
+
+To use it in your DAGs, create an Airflow connection:
+1. Go to **Admin** → **Connections** → **+**
+2. Set **Connection Id**: `postgres_data`
+3. Set **Connection Type**: `Postgres`
+4. Set **Host**: `postgres-data`, **Schema**: `pipeline_data`, **Login**: `datauser`, **Password**: `datapass`, **Port**: `5432`
 
 ### Customization
 Edit `.env` file to customize:
@@ -169,6 +204,13 @@ Edit `.env` file to customize:
 AIRFLOW_UID=50000
 _AIRFLOW_WWW_USER_USERNAME=airflow
 _AIRFLOW_WWW_USER_PASSWORD=airflow
+
+# PostgreSQL Data Database (for storing pipeline results)
+POSTGRES_DATA_HOST=postgres-data
+POSTGRES_DATA_PORT=5432
+POSTGRES_DATA_DB=pipeline_data
+POSTGRES_DATA_USER=datauser
+POSTGRES_DATA_PASSWORD=datapass
 ```
 
 ## 📖 Key Airflow Concepts
